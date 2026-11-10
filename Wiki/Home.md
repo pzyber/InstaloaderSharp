@@ -2,7 +2,7 @@
 
 Welcome to the InstaloaderSharp manual. InstaloaderSharp is a free command-line program for Windows that downloads pictures and videos from Instagram, along with their captions and other metadata: whole profiles, single posts, hashtags, locations, your feed, your saved posts, stories, highlights and reels. It is a C# / .NET Framework version of [Instaloader](https://github.com/instaloader/instaloader), with the same command line and file formats, so the two programs can work on the same downloads.
 
-No previous knowledge of Instaloader is needed. If you are new, start with [Getting started](Getting-started), then read [Targets](Targets) and [Logging in](Logging-in). If you prefer a graphical user interface, have a look at [InstaloaderSharp GUI](https://github.com/InstaloaderSharp/InstaloaderSharpGUI).
+No previous knowledge of Instaloader is needed. If you are new, start with [Getting started](Getting-started), then read [Targets](Targets) and [Logging in](Logging-in). If you prefer a graphical user interface, have a look at [InstaloaderSharp GUI](https://github.com/pzyber/InstaloaderSharpGUI).
 
 ## Getting going
 
@@ -42,7 +42,7 @@ No previous knowledge of Instaloader is needed. If you are new, start with [Gett
 | Page | What it covers |
 |---|---|
 | [Building and contributing](Building-and-contributing) | Building from source, unit tests, reporting bugs, contributing code |
-| [Releases](https://github.com/InstaloaderSharp/InstaloaderSharp/releases) | Downloads of each version, and what changed in it |
+| [Releases](https://github.com/pzyber/InstaloaderSharp/releases) | Downloads of each version, and what changed in it |
 
 ## Conventions in this manual
 

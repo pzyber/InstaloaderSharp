@@ -19,7 +19,7 @@ Nothing else is needed: no Python, no other runtime, no installer.
 
 ## Getting the program
 
-Download the latest `InstaloaderSharp-<version>-win.zip` from the [releases page](https://github.com/InstaloaderSharp/InstaloaderSharp/releases) and extract `InstaloaderSharp.exe` from it. The program is a single file: put it in any folder you like. If you want to run it from any folder, put it in a folder that is in your `PATH`.
+Download the latest `InstaloaderSharp-<version>-win.zip` from the [releases page](https://github.com/pzyber/InstaloaderSharp/releases) and extract `InstaloaderSharp.exe` from it. The program is a single file: put it in any folder you like. If you want to run it from any folder, put it in a folder that is in your `PATH`.
 
 You may rename the file, for example to `instaloader.exe`, so that commands written for Instaloader work unchanged. This manual uses `InstaloaderSharp.exe`.
 

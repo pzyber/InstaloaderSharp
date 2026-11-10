@@ -20,7 +20,7 @@ InstaloaderSharp is a command-line program. Open a command prompt and run it the
 Install .NET Framework 4.8.1 from Microsoft. It is a free runtime and is included in recent Windows 11 builds.
 
 **Windows SmartScreen or my antivirus warns about the program.**
-The program is not signed, which triggers SmartScreen. Click **More info → Run anyway** if you downloaded it from the [official releases page](https://github.com/InstaloaderSharp/InstaloaderSharp/releases). You can also [build it yourself](Building-and-contributing#building-from-source).
+The program is not signed, which triggers SmartScreen. Click **More info → Run anyway** if you downloaded it from the [official releases page](https://github.com/pzyber/InstaloaderSharp/releases). You can also [build it yourself](Building-and-contributing#building-from-source).
 
 **`'InstaloaderSharp.exe' is not recognized as an internal or external command`.**
 The command prompt cannot find the program. Run it with its full path (`C:\Tools\InstaloaderSharp.exe instagram`), change to its folder first, or add its folder to your `PATH`.
@@ -43,7 +43,7 @@ Recent Chrome versions encrypt cookies so that only Chrome can read them. Use Fi
 `--load-cookies` uses the account that is logged in in the browser's default profile. Log in with the right account in the browser, or use `--cookiefile` for another browser profile. The program prints which account it logged in as.
 
 **`Not logged in. Are you logged in successfully in firefox?` after `HTTP redirect from https://www.instagram.com/graphql/query to https://www.instagram.com/`.**
-Older versions of InstaloaderSharp, like Instaloader, check the login with a query that Instagram redirects for some accounts, although the session is valid. Update to the [latest version](https://github.com/InstaloaderSharp/InstaloaderSharp/releases), which checks the login through Instagram's app interface. With `--no-iphone`, the old check is used.
+Older versions of InstaloaderSharp, like Instaloader, check the login with a query that Instagram redirects for some accounts, although the session is valid. Update to the [latest version](https://github.com/pzyber/InstaloaderSharp/releases), which checks the login through Instagram's app interface. With `--no-iphone`, the old check is used.
 
 **The session stopped working.**
 Sessions end when you log out in the browser you imported them from, change your password, or Instagram ends them. Log in again with `--login` (you are asked for the password) or import fresh cookies with `--load-cookies`.
@@ -71,7 +71,7 @@ Instagram has restricted the account and wants you to confirm something. Open In
 Instagram has flagged the account and asks for a verification. Open Instagram in the web browser you are logged in with and complete it; it cannot be done by the program. Then let the account rest for a while, preferably a day, before downloading again; downloading right away usually leads to `feedback_required`. Resume information was saved. Older versions of InstaloaderSharp, like Instaloader, report this as `JSON Query to graphql/query: Expecting value: line 1 column 1 (char 0)`.
 
 **Downloading the reels of a profile with many reels got the account flagged.**
-Each reel is loaded with a request of its own, since the query of the website's reels tab returns them without their dates, captions and videos. Older versions of InstaloaderSharp, like Instaloader, also ask the app for each video's media info, two requests per reel; update to the [latest version](https://github.com/InstaloaderSharp/InstaloaderSharp/releases), which needs one. The first `--reels` download of a profile with many reels still takes about one request per reel; with `--latest-stamps` or `--fast-update`, later downloads only load the new reels. Spread first downloads of large profiles over several days, one profile at a time.
+Each reel is loaded with a request of its own, since the query of the website's reels tab returns them without their dates, captions and videos. Older versions of InstaloaderSharp, like Instaloader, also ask the app for each video's media info, two requests per reel; update to the [latest version](https://github.com/pzyber/InstaloaderSharp/releases), which needs one. The first `--reels` download of a profile with many reels still takes about one request per reel; with `--latest-stamps` or `--fast-update`, later downloads only load the new reels. Spread first downloads of large profiles over several days, one profile at a time.
 
 **`Instagram keeps redirecting ...` or endless `HTTP redirect from ... to https://www.instagram.com/` lines.**
 Instagram redirects every request of the account, usually because it is suspended, restricted or logged out. Open Instagram in a web browser with that account and follow the instructions there; a suspended account may have to be appealed. Older versions of InstaloaderSharp, like Instaloader, follow these redirects forever; press Ctrl+C to stop them.
@@ -80,7 +80,7 @@ Instagram redirects every request of the account, usually because it is suspende
 Instagram refuses more and more requests without login. Log in; see [Logging in](Logging-in).
 
 **`HTTP redirect from https://www.instagram.com/graphql/query to https://www.instagram.com/` and no posts are downloaded.**
-This happens with Instaloader, and with older versions of InstaloaderSharp, when Instagram demands that queries look like its website's. Update to the [latest version](https://github.com/InstaloaderSharp/InstaloaderSharp/releases) of InstaloaderSharp. If it happens with the latest version, your session may be invalid: import fresh cookies with `--load-cookies`.
+This happens with Instaloader, and with older versions of InstaloaderSharp, when Instagram demands that queries look like its website's. Update to the [latest version](https://github.com/pzyber/InstaloaderSharp/releases) of InstaloaderSharp. If it happens with the latest version, your session may be invalid: import fresh cookies with `--load-cookies`.
 
 ## Profiles and posts
 
@@ -88,7 +88,7 @@ This happens with Instaloader, and with older versions of InstaloaderSharp, when
 Check the spelling: usernames contain only letters, digits, `.` and `_`. The profile may have been renamed (if you downloaded it before, the program finds it by its ID), deleted, or it may have blocked your account; logged in, the program then tries again without logging in. Restricted profiles, for example age-restricted ones, are only shown to logged-in users: log in to download them.
 
 **`JSON Query to web/search/topsearch/: 404 Not Found` and `api/v1/users/.../info/: 429 Too Many Requests`.**
-An older version of InstaloaderSharp could not find restricted profiles, and fell back to lookups that Instagram has retired or refuses. Update to the [latest version](https://github.com/InstaloaderSharp/InstaloaderSharp/releases).
+An older version of InstaloaderSharp could not find restricted profiles, and fell back to lookups that Instagram has retired or refuses. Update to the [latest version](https://github.com/pzyber/InstaloaderSharp/releases).
 
 **`Login required.` or `Private but not followed.`**
 The profile is private. You need to be logged in with an account that follows it.
@@ -114,10 +114,10 @@ The download links in the file have expired. Download the post by its shortcode 
 Stories need a login, and only exist for 24 hours. The profile may have no current story, or you may not be allowed to see it (private profile, close friends).
 
 **`--stories` or `--highlights` fails with `JSON Query to graphql/query: Expecting value: line 1 column 1 (char 0)` after `HTTP redirect from https://www.instagram.com/graphql/query to https://www.instagram.com/`.**
-Older versions of InstaloaderSharp, like Instaloader, load stories and highlights with queries that Instagram redirects for some accounts. Update to the [latest version](https://github.com/InstaloaderSharp/InstaloaderSharp/releases), which loads them through Instagram's app interface. With `--no-iphone`, the old queries are used.
+Older versions of InstaloaderSharp, like Instaloader, load stories and highlights with queries that Instagram redirects for some accounts. Update to the [latest version](https://github.com/pzyber/InstaloaderSharp/releases), which loads them through Instagram's app interface. With `--no-iphone`, the old queries are used.
 
 **`--reels` fails with `InvalidCastException: Unable to cast object of type 'InstaloaderSharp.Json.JValue' to type 'InstaloaderSharp.Json.JObject'`.**
-An older version of InstaloaderSharp used a reels query that Instagram no longer answers. Update to the [latest version](https://github.com/InstaloaderSharp/InstaloaderSharp/releases).
+An older version of InstaloaderSharp used a reels query that Instagram no longer answers. Update to the [latest version](https://github.com/pzyber/InstaloaderSharp/releases).
 
 **`Instagram's response to the reels query contains no reels.`**
 Instagram has changed its reels query again. Check for a newer version, or [report it](Building-and-contributing#reporting-bugs). The rest of the download continues.
@@ -197,13 +197,13 @@ No. It only reads from Instagram.
 No, it is a Windows program. Use [Instaloader](https://github.com/instaloader/instaloader) there; it uses the same files and commands.
 
 **Is there a graphical interface?**
-Yes, [InstaloaderSharp GUI](https://github.com/InstaloaderSharp/InstaloaderSharpGUI).
+Yes, [InstaloaderSharp GUI](https://github.com/pzyber/InstaloaderSharpGUI).
 
 **Do I need Python?**
 No. InstaloaderSharp is a single .NET program.
 
 ## Getting help
 
-1. Check the version (`InstaloaderSharp.exe --version`) and update to the [latest release](https://github.com/InstaloaderSharp/InstaloaderSharp/releases): many problems are caused by changes on Instagram's side and are fixed in newer versions.
-2. Search the [issues](https://github.com/InstaloaderSharp/InstaloaderSharp/issues?q=is%3Aissue) for the error message.
+1. Check the version (`InstaloaderSharp.exe --version`) and update to the [latest release](https://github.com/pzyber/InstaloaderSharp/releases): many problems are caused by changes on Instagram's side and are fixed in newer versions.
+2. Search the [issues](https://github.com/pzyber/InstaloaderSharp/issues?q=is%3Aissue) for the error message.
 3. Open a new issue with the command, the complete output and the version. Never post passwords, session files or cookies. See [Building and contributing](Building-and-contributing#reporting-bugs).

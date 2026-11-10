@@ -1,4 +1,4 @@
-InstaloaderSharp is open source under the MIT License. Everything about the project (bug reports, feature requests, questions and code) is handled in the GitHub repository [InstaloaderSharp/InstaloaderSharp](https://github.com/InstaloaderSharp/InstaloaderSharp). The full guidelines are in [CONTRIBUTING.md](https://github.com/InstaloaderSharp/InstaloaderSharp/blob/main/CONTRIBUTING.md); this page summarizes them.
+InstaloaderSharp is open source under the MIT License. Everything about the project (bug reports, feature requests, questions and code) is handled in the GitHub repository [pzyber/InstaloaderSharp](https://github.com/pzyber/InstaloaderSharp). The full guidelines are in [CONTRIBUTING.md](https://github.com/pzyber/InstaloaderSharp/blob/main/CONTRIBUTING.md); this page summarizes them.
 
 ## Contents
 
@@ -22,7 +22,7 @@ You need:
 No NuGet packages or other dependencies are needed.
 
 ```
-git clone https://github.com/InstaloaderSharp/InstaloaderSharp.git
+git clone https://github.com/pzyber/InstaloaderSharp.git
 cd InstaloaderSharp
 "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe" InstaloaderSharp.sln /p:Configuration=Release
 ```
@@ -62,9 +62,9 @@ Use the `vstest.console.exe` of your Visual Studio version; for newer versions i
 
 ## Reporting bugs
 
-Report bugs in the [issue tracker](https://github.com/InstaloaderSharp/InstaloaderSharp/issues):
+Report bugs in the [issue tracker](https://github.com/pzyber/InstaloaderSharp/issues):
 
-1. **Search first** in the [open and closed issues](https://github.com/InstaloaderSharp/InstaloaderSharp/issues?q=is%3Aissue), and add new details to an existing issue instead of opening a duplicate.
+1. **Search first** in the [open and closed issues](https://github.com/pzyber/InstaloaderSharp/issues?q=is%3Aissue), and add new details to an existing issue instead of opening a duplicate.
 2. **Use the latest version.** Many problems are caused by changes on Instagram's side and may be fixed already.
 3. **Open an issue** with a descriptive title, and include:
    - the version (`InstaloaderSharp.exe --version`) and your Windows version;
@@ -80,11 +80,11 @@ Messages about rate limits, `Checkpoint required` and restricted accounts usuall
 
 ## Reporting security issues
 
-Do not open a public issue for security problems, for example in how session files, cookies or credentials are handled. Report them privately through the repository's [Security tab](https://github.com/InstaloaderSharp/InstaloaderSharp/security) (**Report a vulnerability**).
+Do not open a public issue for security problems, for example in how session files, cookies or credentials are handled. Report them privately through the repository's [Security tab](https://github.com/pzyber/InstaloaderSharp/security) (**Report a vulnerability**).
 
 ## Suggesting features and asking questions
 
-Feature requests and questions are welcome as [issues](https://github.com/InstaloaderSharp/InstaloaderSharp/issues/new). Describe what you would like to do and why, and mention whether Instaloader has the feature. InstaloaderSharp only downloads; features that act on Instagram (liking, following, posting) are out of scope.
+Feature requests and questions are welcome as [issues](https://github.com/pzyber/InstaloaderSharp/issues/new). Describe what you would like to do and why, and mention whether Instaloader has the feature. InstaloaderSharp only downloads; features that act on Instagram (liking, following, posting) are out of scope.
 
 ## Contributing code
 
@@ -106,4 +106,4 @@ Project guidelines, in short:
 
 ## Editing this wiki
 
-The pages of this wiki are kept in the repository's [`Wiki` folder](https://github.com/InstaloaderSharp/InstaloaderSharp/tree/main/Wiki), one Markdown file per page, with `_Sidebar.md` as the navigation. Improvements are welcome as pull requests like any other change. Links between pages use the page name without `.md`, for example `[Logging in](Logging-in)`.
+The pages of this wiki are kept in the repository's [`Wiki` folder](https://github.com/pzyber/InstaloaderSharp/tree/main/Wiki), one Markdown file per page, with `_Sidebar.md` as the navigation. Improvements are welcome as pull requests like any other change. Links between pages use the page name without `.md`, for example `[Logging in](Logging-in)`.

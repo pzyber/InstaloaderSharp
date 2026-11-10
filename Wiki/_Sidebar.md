@@ -26,4 +26,4 @@
 
 **Project**
 - [Building and contributing](Building-and-contributing)
-- [Releases](https://github.com/InstaloaderSharp/InstaloaderSharp/releases)
+- [Releases](https://github.com/pzyber/InstaloaderSharp/releases)

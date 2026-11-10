@@ -3,7 +3,7 @@
 Thank you for your interest in InstaloaderSharp! Everything about the project, including bug reports, feature
 requests, questions and code contributions, is handled through the GitHub repository:
 
-**https://github.com/InstaloaderSharp/InstaloaderSharp**
+**https://github.com/pzyber/InstaloaderSharp**
 
 * [Reporting a bug](#reporting-a-bug)
 * [Reporting a security issue](#reporting-a-security-issue)
@@ -17,9 +17,9 @@ requests, questions and code contributions, is handled through the GitHub reposi
 
 ## Reporting a bug
 
-Report bugs in the [issue tracker](https://github.com/InstaloaderSharp/InstaloaderSharp/issues).
+Report bugs in the [issue tracker](https://github.com/pzyber/InstaloaderSharp/issues).
 
-1. **Search first.** Check the [open and closed issues](https://github.com/InstaloaderSharp/InstaloaderSharp/issues?q=is%3Aissue)
+1. **Search first.** Check the [open and closed issues](https://github.com/pzyber/InstaloaderSharp/issues?q=is%3Aissue)
    for the same problem. If you find one, add any new details as a comment instead of opening a duplicate.
 2. **Make sure you use the latest version.** Many problems are caused by changes on Instagram's side and may
    already be fixed in a newer release.
@@ -57,12 +57,12 @@ Waiting, using the account normally in a browser for a while, or re-importing fr
 
 If you find a security problem, for example in how session files, cookies or credentials are handled, **do not
 open a public issue.** Report it privately through the repository's
-[Security tab](https://github.com/InstaloaderSharp/InstaloaderSharp/security) ("Report a vulnerability"),
+[Security tab](https://github.com/pzyber/InstaloaderSharp/security) ("Report a vulnerability"),
 so that it can be fixed before it is disclosed.
 
 ## Suggesting a feature
 
-Feature requests are welcome as [issues](https://github.com/InstaloaderSharp/InstaloaderSharp/issues/new).
+Feature requests are welcome as [issues](https://github.com/pzyber/InstaloaderSharp/issues/new).
 Describe what you would like to do and why (the use case), not only the proposed solution, and mention if
 Instaloader already has the feature. Please keep in mind that InstaloaderSharp only downloads data;
 features that act on Instagram (liking, following, posting, ...) are out of scope.
@@ -70,7 +70,7 @@ features that act on Instagram (liking, following, posting, ...) are out of scop
 ## Asking a question
 
 For questions about using InstaloaderSharp, first check the [README](README.md), which covers all options. If
-it does not answer your question, open an [issue](https://github.com/InstaloaderSharp/InstaloaderSharp/issues)
+it does not answer your question, open an [issue](https://github.com/pzyber/InstaloaderSharp/issues)
 and describe what you are trying to do.
 
 ## Contributing code
@@ -197,7 +197,7 @@ describe how in the pull request:
 3. Make sure your branch is up to date with `main`, builds without errors and warnings, and passes all
    unit tests.
 4. Push the branch to your fork and open a pull request against `main` of
-   [InstaloaderSharp/InstaloaderSharp](https://github.com/InstaloaderSharp/InstaloaderSharp/pulls).
+   [pzyber/InstaloaderSharp](https://github.com/pzyber/InstaloaderSharp/pulls).
 5. In the description, explain what the change does, link the related issue (e.g. "Fixes #12"), and describe
    how you tested it.
 6. Be ready to answer questions and to update your pull request after review.
