@@ -460,7 +460,8 @@ namespace InstaloaderSharp
             }
             catch (AbortDownloadException exc)
             {
-                Console.Error.WriteLine("\nDownload aborted: {0}.", exc.Message);
+                // The messages of InstaloaderSharp's own aborts end with a period already.
+                Console.Error.WriteLine("\nDownload aborted: {0}.", exc.Message.TrimEnd('.'));
                 exitCode = ExitCode.DownloadAborted;
             }
             // Save session if it is useful

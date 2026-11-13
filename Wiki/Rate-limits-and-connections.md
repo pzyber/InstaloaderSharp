@@ -66,10 +66,18 @@ and exits with code 4. Resume information is saved, so you can continue after so
 The download also stops when Instagram answers a logged-in query with a web page instead of data, usually a verification (captcha):
 
 ```
-Instagram answered https://www.instagram.com/graphql/query with a web page instead of data, probably a verification (captcha). Open https://www.instagram.com/ in the web browser you are logged in with, complete the verification and run the download again.
+Instagram answered https://www.instagram.com/graphql/query with a web page instead of data, probably a verification (captcha). Open https://www.instagram.com/ in a web browser logged in with the account, complete the verification there and run InstaloaderSharp again.
 ```
 
 The verification only goes away when it is completed in a web browser, so retrying would only send more requests that Instagram counts against the account. Instaloader retries, and goes on with the next targets, until Instagram answers with `feedback_required`.
+
+The same applies when Instagram redirects a query to its verification page (`/challenge/`):
+
+```
+Instagram asks to verify the account: it redirected https://www.instagram.com/graphql/query to its verification page (https://www.instagram.com/challenge/?next=...). Open https://www.instagram.com/ in a web browser logged in with the account, complete the verification there and run InstaloaderSharp again.
+```
+
+During a download it stops with exit code 4. When it happens while the login is checked (at the start, with `--load-cookies` or `--login`), the program ends with exit code 3. Instaloader retries the login check three times, and then reports that the session is not logged in.
 
 `--abort-on` stops the download in the same way when Instagram answers with one of the given HTTP status codes, without retrying:
 

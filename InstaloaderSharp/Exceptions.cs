@@ -130,6 +130,16 @@ namespace InstaloaderSharp
     }
 
     /// <summary>
+    /// Instagram asks to verify the account (a challenge, checkpoint or captcha), which can only be completed in a
+    /// web browser. Aborts the download like <see cref="AbortDownloadException"/>; the login check raises a
+    /// <see cref="LoginException"/> with the same message instead.
+    /// </summary>
+    public class VerificationRequiredException : AbortDownloadException
+    {
+        public VerificationRequiredException(string message) : base(message) { }
+    }
+
+    /// <summary>
     /// Counterpart of Python's KeyboardInterrupt: raised at the next interruption point after the user hit ^C.
     /// Not a subclass of <see cref="InstaloaderException"/>.
     /// </summary>

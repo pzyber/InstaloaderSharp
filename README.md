@@ -371,7 +371,7 @@ profile2
 | 0 | Success. |
 | 1 | Finished, but errors occurred (they are repeated at the end of the output). |
 | 2 | Invalid command line, or nothing to do. |
-| 3 | Login failed. |
+| 3 | Login failed (also when Instagram asks to verify the account while the login is checked). |
 | 4 | Download aborted (e.g. by `--abort-on`, or because Instagram requires verification). |
 | 5 | Interrupted by the user (Ctrl+C). |
 | 99 | Unexpected error. |
@@ -390,6 +390,8 @@ profile2
 * **"Instagram answered ... with a web page instead of data, probably a verification (captcha)":** open
   Instagram in the web browser you are logged in with, complete the verification, and let the account rest for a
   while before downloading again.
+* **"Instagram asks to verify the account: it redirected ... to its verification page":** the same: open
+  Instagram in a web browser logged in with the account and complete the verification there.
 * **"Profile ... does not exist":** check the spelling; the profile may have been renamed, deleted, or it
   blocked you. When logged in, the program tries again anonymously in that case.
 * **Errors during a run** are printed when they occur and repeated at the end; the program continues with
@@ -493,6 +495,10 @@ so resume files get saved), and the `with` context managers are methods taking a
   (captcha)"* (exit code 4, resume information is saved). Instaloader retries each query and goes on with the
   next targets, which get the same page and count against the account, until Instagram answers with
   `feedback_required`. The verification has to be completed in a web browser; it cannot be bypassed.
+* When Instagram redirects a query to its verification page (`/challenge/`), the program stops at once with
+  *"Instagram asks to verify the account: it redirected ... to its verification page"*: while the login is
+  checked with exit code 3, during a download with exit code 4. Instaloader retries the login check three times
+  and then reports `Not logged in. Are you logged in successfully in firefox?`, although the session is valid.
 * Tagged posts (`--tagged`) are loaded with the query of the website's tagged tab. Instaloader's query only
   returns the first few tagged posts (5 in a test) and then empty pages, so it stops there. The tagged tab's query
   returns the posts without their dates and videos, so each tagged post is loaded with an extra request.

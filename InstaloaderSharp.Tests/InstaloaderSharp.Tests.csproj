@@ -74,6 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PyOsTests.cs" />
     <Compile Include="RateControllerTests.cs" />
+    <Compile Include="VerificationTests.cs" />
     <Compile Include="SqliteAndCryptoTests.cs" />
     <Compile Include="StructureTests.cs" />
     <Compile Include="TestData.cs" />

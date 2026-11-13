@@ -296,6 +296,12 @@ namespace InstaloaderSharp.Http
 
         public const int MaxRedirects = 30;
 
+        /// <summary>
+        /// For tests: maps the URL of each request to the URL it is sent to instead, such as a local server's. The
+        /// cookies and the answer stay those of the original URL.
+        /// </summary>
+        internal static Func<string, string> SendToForTests;
+
         public Session()
         {
             Headers = new HttpHeaders
@@ -420,7 +426,13 @@ namespace InstaloaderSharp.Http
                 requestHeaders.Add(new KeyValuePair<string, string>("Cookie", cookieHeader));
 
             bool http2 = UsesHttp2(url);
-            WinHttpRawResponse raw = WinHttpClient.Send(method, parsed, requestHeaders, body, http2, timeout);
+            ParsedUrl target = parsed;
+            if (SendToForTests != null)
+            {
+                target = ParsedUrl.Parse(SendToForTests(url));
+                http2 = false;
+            }
+            WinHttpRawResponse raw = WinHttpClient.Send(method, target, requestHeaders, body, http2, timeout);
             var response = new Response
             {
                 StatusCode = raw.StatusCode,
