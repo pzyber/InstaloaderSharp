@@ -150,7 +150,7 @@ profile2
 | `0` | Success |
 | `1` | Finished, but some errors occurred. They were printed when they happened and are repeated at the end under `Errors or warnings occurred:` |
 | `2` | Invalid command line or option values, or an invalid filter |
-| `3` | Login failed |
+| `3` | Login failed, or Instagram asks to verify the account while the login is checked |
 | `4` | Download aborted: Instagram demanded a verification, or a status code from `--abort-on` was received |
 | `5` | Interrupted by the user (Ctrl+C) |
 | `99` | Unexpected error; a technical error report (traceback) is printed. Please [report it](Building-and-contributing#reporting-bugs) |

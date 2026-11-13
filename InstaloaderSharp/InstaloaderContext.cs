@@ -409,6 +409,11 @@ namespace InstaloaderSharp
                     if (currentUser != null && !currentUser.Get("username").IsNone())
                         return (string)currentUser["username"];
                 }
+                catch (VerificationRequiredException err)
+                {
+                    // The session is valid, but cannot be used until the account is verified in a web browser.
+                    throw new LoginException(err.Message);
+                }
                 catch (Exception err) when (err is AbortDownloadException || err is ConnectionException)
                 {
                 }
@@ -418,6 +423,10 @@ namespace InstaloaderSharp
                 JObject data = GraphqlQuery("d6f4427fbe92d846298cf93df0b937d3", new JObject());
                 JToken user = data["data"]["user"];
                 return !user.IsNull ? (string)user["username"] : null;
+            }
+            catch (VerificationRequiredException err)
+            {
+                throw new LoginException(err.Message);
             }
             catch (Exception err) when (err is AbortDownloadException || err is ConnectionException)
             {
@@ -592,6 +601,11 @@ namespace InstaloaderSharp
         /// <summary>The number of redirects that GetJson() follows for one request.</summary>
         private const int MaxJsonRedirects = 10;
 
+        /// <summary>What to do when Instagram asks to verify the account.</summary>
+        private const string VerificationAdvice =
+            "Open https://www.instagram.com/ in a web browser logged in with the account, complete the verification " +
+            "there and run InstaloaderSharp again.";
+
         /// <summary>JSON request to Instagram.</summary>
         /// <param name="path">URL, relative to the given domain which defaults to www.instagram.com/</param>
         /// <param name="parameters">request parameters</param>
@@ -661,6 +675,16 @@ namespace InstaloaderSharp
                                                          "some time, recreate the session and try again");
                     }
                     string nextUrl = redirectUrl.EndsWith("/") ? redirectUrl : redirectUrl + "/";
+                    // While the login is checked, the session cookies are set but no username yet. App requests send
+                    // the token derived from them instead.
+                    bool hasSession = IsLoggedIn || !string.IsNullOrEmpty(sess.Cookies.Get("sessionid")) ||
+                                      sess.Headers.ContainsKey("authorization");
+                    // Instagram redirects the queries of an account that it wants verified to its verification page.
+                    // Instaloader retries them, and then reports that the session is not logged in.
+                    if (hasSession && redirectUrl.Contains("/challenge"))
+                        throw new VerificationRequiredException(string.Format(
+                            "Instagram asks to verify the account: it redirected https://{0}/{1} to its verification " +
+                            "page ({2}). {3}", host, path, redirectUrl, VerificationAdvice));
                     // For a suspended or restricted account, Instagram redirects every request to its home page, and the
                     // home page to itself, so following the redirects would never end (as in Instaloader). Stop at a
                     // redirect loop, at too many redirects, and at the pages of suspended accounts and challenges.
@@ -668,7 +692,7 @@ namespace InstaloaderSharp
                         !redirectedTo.Add(nextUrl) || redirectedTo.Count > MaxJsonRedirects)
                     {
                         string message = string.Format("Instagram keeps redirecting https://{0}/{1} (to {2}).", host, path, redirectUrl);
-                        if (!IsLoggedIn)
+                        if (!hasSession)
                             throw new ConnectionException(message);
                         throw new AbortDownloadException(message + " The account may be suspended, restricted or logged " +
                                                          "out; check it in a web browser.");
@@ -694,8 +718,9 @@ namespace InstaloaderSharp
                         JToken json400 = resp.Json();
                         JToken message = json400.Get("message");
                         if (message != null && message.Type == JTokenType.String &&
-                            ((string)message == "feedback_required" || (string)message == "checkpoint_required" ||
-                             (string)message == "challenge_required"))
+                            ((string)message == "checkpoint_required" || (string)message == "challenge_required"))
+                            throw new VerificationRequiredException(ResponseError(resp) + " " + VerificationAdvice);
+                        if (message != null && message.Type == JTokenType.String && (string)message == "feedback_required")
                         {
                             // Raise AbortDownloadException in case of substantial Instagram
                             // requirements to stop producing more requests
@@ -724,10 +749,9 @@ namespace InstaloaderSharp
                 // with the page itself, now that Instagram no longer returns their data.
                 if (IsLoggedIn && redirectedTo.Count == 0 && (path.StartsWith("graphql/") || path.StartsWith("api/")) &&
                     (resp.Headers.Get("Content-Type") ?? "").StartsWith("text/html", StringComparison.OrdinalIgnoreCase))
-                    throw new AbortDownloadException(string.Format(
+                    throw new VerificationRequiredException(string.Format(
                         "Instagram answered https://{0}/{1} with a web page instead of data, probably a verification " +
-                        "(captcha). Open https://www.instagram.com/ in the web browser you are logged in with, complete " +
-                        "the verification and run the download again.", host, path));
+                        "(captcha). {2}", host, path, VerificationAdvice));
                 JToken respJson = resp.Json();
                 if (respJson.ContainsKey("status") && !JToken.DeepEquals(respJson["status"], "ok"))
                     throw new ConnectionException(ResponseError(resp));

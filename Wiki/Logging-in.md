@@ -166,6 +166,7 @@ With `--quiet`, the program never asks questions: if the session is no longer va
 | `Login error: "fail" status, message "..."` or `Login error: Unexpected response, this might indicate a blocked IP.` | Instagram refused the login. Use `--load-cookies` instead. |
 | `No cookies found for Instagram in firefox, Are you logged in successfully in firefox?` | Log in to instagram.com in that browser first, or use `--cookiefile` for a non-default profile. |
 | `Not logged in. Are you logged in successfully in firefox?` | The cookies were found, but the browser is not logged in (anymore). Log in to instagram.com in the browser and try again. |
+| `Instagram asks to verify the account: it redirected ... to its verification page` | The login is valid, but Instagram wants the account verified first. Open instagram.com in a browser logged in with the account, complete the verification there, then try again. |
 | `Failed to find Chrome cookie` | The browser's cookie database was not found. Use `--cookiefile`, or another browser. |
 | `--load-cookies and --login cannot be used together.` | Use one of them; after importing cookies once, `--login` is enough. |
 | `Please wait a few minutes before you try again.` (401) | The account or connection is temporarily limited. Wait, use the account normally in a browser for a while, or import fresh cookies with `--load-cookies`. See [Troubleshooting and FAQ](Troubleshooting-and-FAQ#rate-limits-and-blocks). |
