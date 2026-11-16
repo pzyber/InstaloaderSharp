@@ -378,6 +378,13 @@ namespace InstaloaderSharp
             }
         }
 
+        /// <summary>URL of the largest image version of a media in the app's format, or null if it has none.</summary>
+        private static string FirstCandidateUrl(JToken media)
+        {
+            JToken candidates = media.Get("image_versions2").Or(new JObject()).Get("candidates").Or(new JArray());
+            return candidates is JArray && candidates.Truthy ? (string)candidates[0]["url"] : null;
+        }
+
         /// <summary>Lookups given fields in _node, and if not found in _full_metadata. Raises KeyError if not found anywhere.</summary>
         private JToken Field(params string[] keys)
         {
@@ -467,7 +474,12 @@ namespace InstaloaderSharp
                 {
                     try
                     {
-                        string origUrl = (string)IphoneStruct["image_versions2"]["candidates"][0]["url"];
+                        // The post details (posts loaded by their shortcode, as tagged posts and reels) contain the
+                        // same image versions as the app's media info, which Instaloader requests for every image:
+                        // the same files and sizes in all 366 images compared. Using them halves the requests per
+                        // post, which got accounts asked to verify (challenge_required) on the media info.
+                        string origUrl = FirstCandidateUrl(_node) ??
+                                         (string)IphoneStruct["image_versions2"]["candidates"][0]["url"];
                         return StructureHelpers.StripSeParam(origUrl);
                     }
                     catch (Exception err) when (err is InstaloaderException || err is PyKeyError || err is PyIndexError)
@@ -541,8 +553,16 @@ namespace InstaloaderSharp
                         {
                             try
                             {
-                                JToken carouselMedia = IphoneStruct["carousel_media"];
-                                string origUrl = (string)carouselMedia[idx]["image_versions2"]["candidates"][0]["url"];
+                                // As for single images, see Url.
+                                JToken nodeCarousel = _node.Get("carousel_media");
+                                string origUrl = nodeCarousel is JArray && idx < nodeCarousel.Count
+                                                     ? FirstCandidateUrl(nodeCarousel[idx])
+                                                     : null;
+                                if (origUrl == null)
+                                {
+                                    JToken carouselMedia = IphoneStruct["carousel_media"];
+                                    origUrl = (string)carouselMedia[idx]["image_versions2"]["candidates"][0]["url"];
+                                }
                                 displayUrl = StructureHelpers.StripSeParam(origUrl);
                             }
                             catch (Exception err) when (err is InstaloaderException || err is PyKeyError || err is PyIndexError)

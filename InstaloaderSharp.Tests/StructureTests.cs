@@ -219,6 +219,32 @@ namespace InstaloaderSharp.Tests
         }
 
         [TestMethod]
+        public void ImageUrlsUseTheImageVersionsOfTheNode()
+        {
+            // Logged in, images whose node has their image versions (as from the post details) are not looked up in
+            // the app's media info either.
+            InstaloaderContext context = TestData.Context();
+            context.Username = "someuser";
+            JObject image = PyJson.Loads(
+                "{\"shortcode\":\"DeraQlgorHA\",\"id\":\"3700000000000000001\",\"__typename\":\"GraphImage\"," +
+                "\"is_video\":false,\"display_url\":\"https://x/small.jpg\"," +
+                "\"image_versions2\":{\"candidates\":[{\"url\":\"https://x/a.jpg?stp=1&se=7\"}]}}").AsObject();
+            Assert.AreEqual("https://x/a.jpg?stp=1", new Post(context, image).Url);
+            JObject sidecar = PyJson.Loads(
+                "{\"shortcode\":\"DeraQlgorHB\",\"id\":\"3700000000000000002\",\"__typename\":\"GraphSidecar\"," +
+                "\"is_video\":false,\"edge_sidecar_to_children\":{\"edges\":[" +
+                "{\"node\":{\"is_video\":false,\"display_url\":\"https://x/small1.jpg\"}}," +
+                "{\"node\":{\"is_video\":true,\"display_url\":\"https://x/small2.jpg\",\"video_url\":\"https://x/2.mp4\"}}]}," +
+                "\"carousel_media\":[{\"media_type\":1,\"image_versions2\":{\"candidates\":[{\"url\":\"https://x/1.jpg\"}]}}," +
+                "{\"media_type\":2,\"image_versions2\":{\"candidates\":[{\"url\":\"https://x/2.jpg\"}]}}]}").AsObject();
+            List<PostSidecarNode> nodes = new Post(context, sidecar).GetSidecarNodes().ToList();
+            Assert.AreEqual("https://x/1.jpg", nodes[0].DisplayUrl);
+            Assert.AreEqual("https://x/small2.jpg", nodes[1].DisplayUrl);
+            Assert.AreEqual("https://x/2.mp4", nodes[1].VideoUrl);
+            Assert.AreEqual(0, context.ErrorLog.Count);
+        }
+
+        [TestMethod]
         public void HighlightFromIphoneTrayItem()
         {
             // An item of the app's highlights tray.
