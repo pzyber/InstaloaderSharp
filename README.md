@@ -486,6 +486,11 @@ so resume files get saved), and the `with` context managers are methods taking a
   request instead of two: the first `--reels` download of a profile with 1,200 reels took about 2,500 requests,
   enough for Instagram to flag the account (a captcha, then `feedback_required`). The saved metadata of these videos
   has no `iphone_struct`.
+* The same applies to pictures: logged in, a post whose details already contain its image versions (as those of
+  tagged posts and single posts do) is downloaded without the app's media info, which Instaloader asks for for every
+  picture and carousel. The versions in it were the same sizes and files in all 366 pictures compared. Each tagged
+  picture post takes one request instead of two; with two, a `--tagged` download of a profile with a few hundred
+  tagged posts got the account asked to verify (`challenge_required`).
 * Logged in, the program allows half as many requests as Instaloader within the same time: 100 of each kind of
   query and 150 queries in total per 10 minutes, and 100 requests to the app interface per 30 minutes. Instagram
   limits the requests of an account, and flagged accounts that stayed within Instaloader's limits. Logged out,
