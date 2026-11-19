@@ -444,6 +444,10 @@ so resume files get saved), and the `with` context managers are methods taking a
   message to check the account in a web browser.
 * Syntax errors in filters are reported as an error message (exit code 2) instead of a Python traceback.
 * Sets of profiles are processed in the order they were given rather than Instaloader's set order.
+* When Instagram answers the details of a post without the post, the error names the post and shows the start of
+  Instagram's answer (*"Fetching Post metadata of ... failed: Instagram answered without the post: ..."*), instead
+  of Instaloader's *"Fetching Post metadata failed."*. As in Instaloader, a download of tagged posts or reels stops
+  at that post, and is resumed there the next time.
 * Geotags (`--geotags`) work again, also without logging in. Instagram now names the location ID `pk` and
   no longer provides `slug` and `has_public_page`, which Instaloader fails on (`KeyError: 'id'`); its
   fallback lookup (`explore/locations/`) no longer returns data either. In saved metadata, a post's location
@@ -486,6 +490,11 @@ so resume files get saved), and the `with` context managers are methods taking a
   request instead of two: the first `--reels` download of a profile with 1,200 reels took about 2,500 requests,
   enough for Instagram to flag the account (a captcha, then `feedback_required`). The saved metadata of these videos
   has no `iphone_struct`.
+* The same applies to pictures: logged in, a post whose details already contain its image versions (as those of
+  tagged posts and single posts do) is downloaded without the app's media info, which Instaloader asks for for every
+  picture and carousel. The versions in it were the same sizes and files in all 366 pictures compared. Each tagged
+  picture post takes one request instead of two; with two, a `--tagged` download of a profile with a few hundred
+  tagged posts got the account asked to verify (`challenge_required`).
 * Logged in, the program allows half as many requests as Instaloader within the same time: 100 of each kind of
   query and 150 queries in total per 10 minutes, and 100 requests to the app interface per 30 minutes. Instagram
   limits the requests of an account, and flagged accounts that stayed within Instaloader's limits. Logged out,

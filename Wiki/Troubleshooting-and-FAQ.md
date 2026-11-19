@@ -76,6 +76,9 @@ Instagram wants the account verified before it answers further requests. Open ht
 **Downloading the reels of a profile with many reels got the account flagged.**
 Each reel is loaded with a request of its own, since the query of the website's reels tab returns them without their dates, captions and videos. Older versions of InstaloaderSharp, like Instaloader, also ask the app for each video's media info, two requests per reel; update to the [latest version](https://github.com/pzyber/InstaloaderSharp/releases), which needs one. The first `--reels` download of a profile with many reels still takes about one request per reel; with `--latest-stamps` or `--fast-update`, later downloads only load the new reels. Spread first downloads of large profiles over several days, one profile at a time.
 
+**Downloading the tagged posts of a profile got the account asked to verify (`challenge_required`).**
+Each tagged post is loaded with a request of its own, since the query of the website's tagged tab returns the posts without their dates and videos. Older versions of InstaloaderSharp, like Instaloader, also ask the app for each picture's media info, two requests per post; update to the [latest version](https://github.com/pzyber/InstaloaderSharp/releases), which needs one. With `--latest-stamps` or `--fast-update`, later downloads only load the new tagged posts. Spread first downloads of large profiles over several days, one profile at a time.
+
 **`Instagram keeps redirecting ...` or endless `HTTP redirect from ... to https://www.instagram.com/` lines.**
 Instagram redirects every request of the account, usually because it is suspended, restricted or logged out. Open Instagram in a web browser with that account and follow the instructions there; a suspended account may have to be appealed. Older versions of InstaloaderSharp, like Instaloader, follow these redirects forever; press Ctrl+C to stop them.
 
