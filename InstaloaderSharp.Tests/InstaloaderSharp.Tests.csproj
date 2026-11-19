@@ -71,6 +71,7 @@
     <Compile Include="LatestStampsTests.cs" />
     <Compile Include="NodeIteratorTests.cs" />
     <Compile Include="PickleTests.cs" />
+    <Compile Include="PostDetailsFallbackTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PyOsTests.cs" />
     <Compile Include="RateControllerTests.cs" />

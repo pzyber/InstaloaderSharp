@@ -448,6 +448,10 @@ so resume files get saved), and the `with` context managers are methods taking a
   Instagram's answer (*"Fetching Post metadata of ... failed: Instagram answered without the post: ..."*), instead
   of Instaloader's *"Fetching Post metadata failed."*. As in Instaloader, a download of tagged posts or reels stops
   at that post, and is resumed there the next time.
+* Instagram has listed a post of a profile (a carousel) without any of its pictures. Instaloader stops the whole
+  download with `IndexError: list index out of range`; InstaloaderSharp loads the pictures from the post's details,
+  with one more request for that post only. If the details contain no pictures either, the error *"Instagram returned
+  no picture of ..."* names the post.
 * Geotags (`--geotags`) work again, also without logging in. Instagram now names the location ID `pk` and
   no longer provides `slug` and `has_public_page`, which Instaloader fails on (`KeyError: 'id'`); its
   fallback lookup (`explore/locations/`) no longer returns data either. In saved metadata, a post's location
