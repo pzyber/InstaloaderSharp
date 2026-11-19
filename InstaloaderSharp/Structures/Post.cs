@@ -85,7 +85,9 @@ namespace InstaloaderSharp
             {
                 fakeNode["display_url"] = media["image_versions2"]["candidates"][0]["url"];
             }
-            catch (PyKeyError)
+            // Instagram has listed posts without image versions (an empty list of candidates), on which Instaloader
+            // fails with IndexError. The missing fields are then looked up in the post details.
+            catch (Exception ex) when (ex is PyKeyError || ex is PyIndexError)
             {
             }
             try
@@ -94,7 +96,7 @@ namespace InstaloaderSharp
                 fakeNode["video_duration"] = media["video_duration"];
                 fakeNode["video_view_count"] = media["view_count"];
             }
-            catch (Exception ex) when (ex is PyKeyError || ex is PyTypeError)
+            catch (Exception ex) when (ex is PyKeyError || ex is PyTypeError || ex is PyIndexError)
             {
             }
             try
@@ -104,7 +106,7 @@ namespace InstaloaderSharp
                     edges.Add(new JObject { { "node", ConvertIphoneCarousel((JObject)node) } });
                 fakeNode["edge_sidecar_to_children"] = new JObject { { "edges", edges } };
             }
-            catch (Exception ex) when (ex is PyKeyError || ex is PyTypeError)
+            catch (Exception ex) when (ex is PyKeyError || ex is PyTypeError || ex is PyIndexError)
             {
             }
             return new Post(context, fakeNode,
@@ -393,6 +395,29 @@ namespace InstaloaderSharp
             return candidates is JArray && candidates.Truthy ? (string)candidates[0]["url"] : null;
         }
 
+        /// <summary>
+        /// URL of the largest image version of the post (carouselIndex -1) or of an item of its carousel, or null if
+        /// Instagram gives none. Taken from what is already loaded: the post details (as for tagged posts and reels,
+        /// which contain the same image versions as the app's media info: the same files and sizes in all 366 images
+        /// compared) or the app's media item (as for the posts of a profile). Otherwise the app's media info is
+        /// requested, as Instaloader does for every image. Instagram has listed the posts of a profile with a
+        /// carousel without any image versions (image_versions2.candidates = []), on which Instaloader fails with
+        /// IndexError; then the post details are loaded.
+        /// </summary>
+        private string BestImageUrl(int carouselIndex)
+        {
+            Func<JToken, string> pick = media =>
+            {
+                if (media == null)
+                    return null;
+                if (carouselIndex < 0)
+                    return FirstCandidateUrl(media);
+                JToken carousel = media.Get("carousel_media");
+                return carousel is JArray && carouselIndex < carousel.Count ? FirstCandidateUrl(carousel[carouselIndex]) : null;
+            };
+            return pick(_node) ?? pick(_fullMetadataDict) ?? pick(IphoneStruct) ?? pick(FullMetadata);
+        }
+
         /// <summary>Lookups given fields in _node, and if not found in _full_metadata. Raises KeyError if not found anywhere.</summary>
         private JToken Field(params string[] keys)
         {
@@ -482,20 +507,25 @@ namespace InstaloaderSharp
                 {
                     try
                     {
-                        // The post details (posts loaded by their shortcode, as tagged posts and reels) contain the
-                        // same image versions as the app's media info, which Instaloader requests for every image:
-                        // the same files and sizes in all 366 images compared. Using them halves the requests per
+                        // Using the image versions of the post details, when they are loaded, halves the requests per
                         // post, which got accounts asked to verify (challenge_required) on the media info.
-                        string origUrl = FirstCandidateUrl(_node) ??
-                                         (string)IphoneStruct["image_versions2"]["candidates"][0]["url"];
-                        return StructureHelpers.StripSeParam(origUrl);
+                        string origUrl = BestImageUrl(-1);
+                        if (origUrl != null)
+                            return StructureHelpers.StripSeParam(origUrl);
                     }
                     catch (Exception err) when (err is InstaloaderException || err is PyKeyError || err is PyIndexError)
                     {
                         _context.Error(string.Format("Unable to fetch high quality image version of {0}: {1}", this, err.Message));
                     }
                 }
-                return (string)(_node.ContainsKey("display_url") ? _node["display_url"] : _node["display_src"]);
+                // A post from the app's media item without image versions has no display_url: then it is looked up in
+                // the post details.
+                string url = (string)(_node.ContainsKey("display_url") ? _node["display_url"]
+                                      : _node.ContainsKey("display_src") ? _node["display_src"]
+                                      : Field("display_url"));
+                if (string.IsNullOrEmpty(url))
+                    throw new BadResponseException(string.Format("Instagram returned no picture of {0}.", this));
+                return url;
             }
         }
 
@@ -562,22 +592,18 @@ namespace InstaloaderSharp
                             try
                             {
                                 // As for single images, see Url.
-                                JToken nodeCarousel = _node.Get("carousel_media");
-                                string origUrl = nodeCarousel is JArray && idx < nodeCarousel.Count
-                                                     ? FirstCandidateUrl(nodeCarousel[idx])
-                                                     : null;
-                                if (origUrl == null)
-                                {
-                                    JToken carouselMedia = IphoneStruct["carousel_media"];
-                                    origUrl = (string)carouselMedia[idx]["image_versions2"]["candidates"][0]["url"];
-                                }
-                                displayUrl = StructureHelpers.StripSeParam(origUrl);
+                                string origUrl = BestImageUrl(idx);
+                                if (origUrl != null)
+                                    displayUrl = StructureHelpers.StripSeParam(origUrl);
                             }
                             catch (Exception err) when (err is InstaloaderException || err is PyKeyError || err is PyIndexError)
                             {
                                 _context.Error(string.Format("Unable to fetch high quality image version of {0}: {1}", this, err.Message));
                             }
                         }
+                        if (!isVideo && string.IsNullOrEmpty(displayUrl))
+                            throw new BadResponseException(
+                                string.Format("Instagram returned no picture of item {0} of {1}.", idx + 1, this));
                         yield return new PostSidecarNode(isVideo, displayUrl, isVideo ? (string)node["video_url"] : null);
                     }
                 }
