@@ -342,7 +342,15 @@ namespace InstaloaderSharp
                 JToken webInfo = resp.Get("data").Or(new JObject()).Get("xdt_api__v1__media__shortcode__web_info").Or(new JObject());
                 JToken items = webInfo.Get("items");
                 if (items == null || !items.Truthy)
-                    throw new BadResponseException("Fetching Post metadata failed.");
+                {
+                    // Instaloader only reports "Fetching Post metadata failed.". Name the post and show the start of
+                    // the answer: Instagram has answered without a post that it answered normally later.
+                    string answer = PyJson.Dumps(resp);
+                    if (answer.Length > 300)
+                        answer = answer.Substring(0, 300) + "...";
+                    throw new BadResponseException(string.Format(
+                        "Fetching Post metadata of {0} failed: Instagram answered without the post: {1}", Shortcode, answer));
+                }
                 _fullMetadataDict = NormalizePostData((JObject)items[0], _context);
                 if (Shortcode != (string)_fullMetadataDict["shortcode"])
                 {
