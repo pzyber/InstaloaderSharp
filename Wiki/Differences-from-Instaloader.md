@@ -51,6 +51,7 @@ InstaloaderSharp follows Instaloader closely, but it puts working correctly befo
 
 - **Syntax errors in filters** are reported as an error message, with exit code 2, instead of a Python traceback.
 - **Several profiles** are downloaded in the order they were given, instead of in the order of Python's set.
+- **Empty post details name the post.** When Instagram answers the details of a post without the post, the error is `Fetching Post metadata of <shortcode> failed: Instagram answered without the post: ...`, with the start of Instagram's answer, instead of Instaloader's `Fetching Post metadata failed.`. Instagram has answered without a post that it answered normally later. As in Instaloader, a download of tagged posts or reels stops at that post, so no post is skipped, and is resumed there the next time.
 
 ## Platform
 

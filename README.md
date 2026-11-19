@@ -444,6 +444,10 @@ so resume files get saved), and the `with` context managers are methods taking a
   message to check the account in a web browser.
 * Syntax errors in filters are reported as an error message (exit code 2) instead of a Python traceback.
 * Sets of profiles are processed in the order they were given rather than Instaloader's set order.
+* When Instagram answers the details of a post without the post, the error names the post and shows the start of
+  Instagram's answer (*"Fetching Post metadata of ... failed: Instagram answered without the post: ..."*), instead
+  of Instaloader's *"Fetching Post metadata failed."*. As in Instaloader, a download of tagged posts or reels stops
+  at that post, and is resumed there the next time.
 * Geotags (`--geotags`) work again, also without logging in. Instagram now names the location ID `pk` and
   no longer provides `slug` and `has_public_page`, which Instaloader fails on (`KeyError: 'id'`); its
   fallback lookup (`explore/locations/`) no longer returns data either. In saved metadata, a post's location
