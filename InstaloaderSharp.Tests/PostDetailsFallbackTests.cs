@@ -12,8 +12,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace InstaloaderSharp.Tests
 {
     /// <summary>
-    /// Posts that Instagram lists without their pictures, answered by a local server in place of Instagram (no
-    /// internet access needed).
+    /// Posts that Instagram lists without their pictures, and highlights listed without a cover or items, answered
+    /// by a local server in place of Instagram (no internet access needed).
     /// </summary>
     [TestClass]
     public class PostDetailsFallbackTests
@@ -148,6 +148,38 @@ namespace InstaloaderSharp.Tests
             {
                 Assert.AreEqual("Instagram returned no picture of item 1 of <Post BlWFBJxhBtI>.", err.Message);
             }
+        }
+
+        [TestMethod]
+        public void HighlightsOnlyForSubscribersAreSkipped()
+        {
+            // Instagram lists the highlights only for subscribers of a profile (FAN_CLUB) to accounts that are not
+            // subscribed, but without a cover (cover_media null) and with a count of 0 items.
+            const string trayPath = "/i.instagram.com/api/v1/highlights/25025320/highlights_tray/";
+            _answer = path => path == trayPath
+                ? "{\"tray\":[{\"id\":\"highlight:17990134595293637\",\"title\":\"Exclusive\",\"media_count\":0," +
+                  "\"highlight_reel_type\":\"FAN_CLUB\",\"cover_media\":null,\"latest_reel_media\":null," +
+                  "\"user\":{\"pk\":25025320,\"username\":\"someuser\",\"profile_pic_url\":\"https://x/pic.jpg\"}}]," +
+                  "\"status\":\"ok\"}"
+                : "{}";
+            var loader = new Instaloader(sleep: false, quiet: true, maxConnectionAttempts: 1);
+            loader.Context.UpdateCookies(new[]
+            {
+                new KeyValuePair<string, string>("sessionid", "1234%3Aabc%3A1"),
+                new KeyValuePair<string, string>("ds_user_id", "1234"),
+                new KeyValuePair<string, string>("csrftoken", "token")
+            });
+            loader.Context.Username = "someuser";
+
+            Highlight highlight = loader.GetHighlights(25025320L).Single();
+            Assert.IsTrue(highlight.IsSubscribersOnly);
+            Assert.IsNull(highlight.CoverUrl);
+            Assert.IsNull(highlight.CoverCroppedUrl);
+
+            loader.DownloadHighlights(25025320L);
+            CollectionAssert.AreEqual(new List<string> { trayPath, trayPath }, RequestsMade(),
+                                      "the tray only, once for each call: no cover or items requested");
+            Assert.AreEqual(0, loader.Context.ErrorLog.Count, string.Join(", ", loader.Context.ErrorLog));
         }
 
         private static List<string> RequestsMade()

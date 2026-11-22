@@ -452,6 +452,10 @@ so resume files get saved), and the `with` context managers are methods taking a
   download with `IndexError: list index out of range`; InstaloaderSharp loads the pictures from the post's details,
   with one more request for that post only. If the details contain no pictures either, the error *"Instagram returned
   no picture of ..."* names the post.
+* The highlights of a profile are listed from the app, which also lists the highlights that are only for the
+  profile's subscribers to accounts that are not subscribed, without a cover or items. They are skipped with
+  *"Highlights ... are only for its subscribers, skipped"*, and the other highlights are downloaded. A highlight
+  without a cover is reported as an error, and its items are still downloaded.
 * Geotags (`--geotags`) work again, also without logging in. Instagram now names the location ID `pk` and
   no longer provides `slug` and `has_public_page`, which Instaloader fails on (`KeyError: 'id'`); its
   fallback lookup (`explore/locations/`) no longer returns data either. In saved metadata, a post's location
