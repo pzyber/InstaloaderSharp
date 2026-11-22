@@ -554,6 +554,8 @@ namespace InstaloaderSharp
                 { "cover_media", new JObject { { "thumbnail_src", full } } },
                 { "cover_media_cropped_thumbnail", new JObject { { "url", cropped } } },
                 { "latest_reel_media", trayItem.Get("latest_reel_media", JValue.Null) },
+                { "highlight_reel_type", trayItem.Get("highlight_reel_type", JValue.Null) },
+                { "media_count", trayItem.Get("media_count", JValue.Null) },
                 {
                     "owner", new JObject
                     {
@@ -591,11 +593,36 @@ namespace InstaloaderSharp
         /// <summary>The title of these highlights.</summary>
         public string Title { get { return (string)NodeField["title"]; } }
 
-        /// <summary>URL of the highlights' cover.</summary>
-        public string CoverUrl { get { return (string)NodeField["cover_media"]["thumbnail_src"]; } }
+        /// <summary>URL of the highlights' cover, or null if Instagram has not given one.</summary>
+        public string CoverUrl
+        {
+            get { return (string)NodeField.Get("cover_media").Or(new JObject()).Get("thumbnail_src", JValue.Null); }
+        }
 
-        /// <summary>URL of the cropped version of the cover.</summary>
-        public string CoverCroppedUrl { get { return (string)NodeField["cover_media_cropped_thumbnail"]["url"]; } }
+        /// <summary>URL of the cropped version of the cover, or null if Instagram has not given one.</summary>
+        public string CoverCroppedUrl
+        {
+            get { return (string)NodeField.Get("cover_media_cropped_thumbnail").Or(new JObject()).Get("url", JValue.Null); }
+        }
+
+        /// <summary>Whether these highlights are only for the subscribers of their owner.</summary>
+        public bool IsSubscribersOnly
+        {
+            get { return (string)NodeField.Get("highlight_reel_type", JValue.Null) == "FAN_CLUB"; }
+        }
+
+        /// <summary>
+        /// Whether these highlights are only for subscribers and Instagram has given no items of them, as for
+        /// accounts that are not subscribed: no cover and a count of 0 items.
+        /// </summary>
+        internal bool IsLockedForSubscribers
+        {
+            get
+            {
+                JToken mediaCount = NodeField.Get("media_count", JValue.Null);
+                return IsSubscribersOnly && (mediaCount.IsNone() || mediaCount.ToInt64() == 0);
+            }
+        }
 
         private void FetchItems()
         {

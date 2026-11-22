@@ -263,6 +263,7 @@ namespace InstaloaderSharp.Tests
             Assert.AreEqual("someuser", highlight.OwnerUsername);
             Assert.AreEqual(25025320L, highlight.OwnerId);
             Assert.AreEqual("<Highlight by someuser: Me>", highlight.ToString());
+            Assert.IsFalse(highlight.IsSubscribersOnly);
         }
     }
 }

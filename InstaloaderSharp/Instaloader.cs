@@ -1497,11 +1497,23 @@ namespace InstaloaderSharp
                     ? (object)filenameTarget
                     : new TargetPath(PostPathFormatter.SanitizePath(name, SanitizePaths),
                                      PostPathFormatter.SanitizePath(userHighlight.Title, SanitizePaths));
-                Context.Log(string.Format("[{0}/{1}] Retrieving highlights \"{2}\" from profile {3}",
-                                          highlightNumber.ToString(CultureInfo.InvariantCulture).PadLeft(width),
-                                          userHighlights.Count.ToString(CultureInfo.InvariantCulture).PadLeft(width),
-                                          userHighlight.Title, name));
-                DownloadHighlightCover(userHighlight, highlightTarget);
+                string position = string.Format("[{0}/{1}]",
+                                                highlightNumber.ToString(CultureInfo.InvariantCulture).PadLeft(width),
+                                                userHighlights.Count.ToString(CultureInfo.InvariantCulture).PadLeft(width));
+                // The app's highlights tray lists the highlights only for subscribers to everyone, but without a cover
+                // or items for accounts that are not subscribed.
+                if (userHighlight.IsLockedForSubscribers)
+                {
+                    Context.Log(string.Format("{0} Highlights \"{1}\" from profile {2} are only for its subscribers, skipped",
+                                              position, userHighlight.Title, name));
+                    continue;
+                }
+                Context.Log(string.Format("{0} Retrieving highlights \"{1}\" from profile {2}", position, userHighlight.Title, name));
+                if (string.IsNullOrEmpty(userHighlight.CoverUrl))
+                    Context.Error(string.Format("Highlights \"{0}\" from profile {1}: Instagram returned no cover picture.",
+                                                userHighlight.Title, name));
+                else
+                    DownloadHighlightCover(userHighlight, highlightTarget);
                 // Retrieving one highlight's items can fail on its own; continue with the other highlights then.
                 // (Instaloader stops downloading the profile's highlights.)
                 int totalcount = 0;
